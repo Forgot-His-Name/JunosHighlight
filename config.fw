@@ -1,0 +1,48 @@
+
+any uncommented text must be marked as error
+
+# set filters:
+
+set filter servers-in term discard-locals from source-address 127.0.0.0/8
+set filter servers-in term discard-locals then discard
+
+set filter servers-in term permit-https from source-address 192.168.128.16
+set filter servers-in term permit-https from source-port 443
+set filter servers-in term permit-https from destination-address 10.10.10.10/30
+set filter servers-in term permit-https from protocol tcp
+set filter servers-in term permit-https from tcp-established
+set filter servers-in term permit-https then accept
+
+set filter servers-in apply-groups deny-any
+
+# this is broken statements:
+set filter servers-in term permit-https from source-port all
+set filter servers-in term permit-https from destination-address 4.5.6.7.8/24
+
+# set prefix lists:
+
+set policy-options prefix-list blocked-list 7.7.7.7
+set policy-options prefix-list blocked-list 8.8.8.8
+
+# set juniper srx zones:
+
+set security policies from-zone public to-zone trust policy server.name match source-address 1.2.3.4
+set security policies from-zone public to-zone trust policy server.name match source-address server.address
+set security policies from-zone public to-zone trust policy server.name match destination-address any
+set security policies from-zone public to-zone trust policy server.name match application any
+set security policies from-zone public to-zone trust policy server.name apply-groups deny-and-log
+
+# set groups
+
+set groups clients-in firewall family inet filter <*> term permit-icmp from destination-prefix-list all-clients
+set groups clients-in firewall family inet filter <*> term permit-icmp from protocol icmp
+set groups clients-in firewall family inet filter <*> term permit-icmp from icmp-type echo-reply
+set groups clients-in firewall family inet filter <*> term permit-icmp then accept
+
+set groups protected-port interfaces <*> unit 0 family ethernet-switching port-mode trunk
+set groups protected-port interfaces <*> unit 0 family ethernet-switching vlan members vlan-2
+set groups protected-port interfaces <*> unit 0 family ethernet-switching vlan members vlan-4096
+set groups protected-port interfaces <*> unit 0 family ethernet-switching native-vlan-id 1
+
+set groups protected-vlans protocols protection-group ethernet-ring <*> data-channel vlan vlan-2
+set groups protected-vlans protocols protection-group ethernet-ring <*> data-channel vlan vlan-4096

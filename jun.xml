@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE language SYSTEM "language.dtd">
+<language name="Juniper Firewall" version="1.0" kateversion="5.0" section="Configuration" extensions="*.fw" author="Forgot-His-Name" license="BSD">
+
+	<highlighting>
+
+		<list name="protocols">
+			<item>tcp</item>
+			<item>udp</item>
+			<item>ip</item>
+			<item>icmp</item>
+		</list>
+
+
+		<contexts>
+			<context name="unknown" attribute="Default Text" lineEndContext="#stay">
+				<DetectChar context="comment" char="#" firstNonSpace="1" />
+				<StringDetect String="set filter" context="item name" />
+				<StringDetect String="set groups" context="item name" />
+				<StringDetect String="firewall family inet filter" context="item name" />
+				<StringDetect String="term" context="item name" />
+				<StringDetect String="apply-groups" context="item name" />
+				<StringDetect String="from protocol" context="protocol name" />
+				<StringDetect String="from destination-address" context="prefix name" />
+				<StringDetect String="from source-address" context="prefix name" />
+				<StringDetect String="from destination-port" context="port" />
+				<StringDetect String="from source-port" context="port" />
+				<StringDetect String="from destination-prefix-list" context="item name" />
+				<StringDetect String="from source-prefix-list" context="item name" />
+				<StringDetect String="from tcp-established" attribute="Normal Text" />
+				<StringDetect String="then accept"   attribute="Normal Text" />
+				<StringDetect String="then discard"  attribute="Normal Text" />
+				<StringDetect String="then reject"   attribute="Normal Text" />
+				<StringDetect String="then syslog"   attribute="Normal Text" />
+			</context>
+			
+			<context name="item name" attribute="Normal Text" lineEndContext="unknown">
+				<RegExpr context="unknown" attribute="Name Text" String="\S+" />
+			</context>
+			
+			<context name="protocol name" attribute="Normal Text" lineEndContext="unknown">
+				<keyword String="protocols" attribute="Normal Text" />
+			</context>
+			
+			<context name="prefix name" attribute="Normal Text" lineEndContext="unknown">
+				<RegExpr String="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(/\d{1,2})?" attribute="Addr Text" context="unknown" />
+			</context>
+			
+			<context name="port" attribute="Normal Text" lineEndContext="unknown">
+				<Int attribute="Addr Text" />
+			</context>
+			
+			<context name="comment" attribute="Comment" lineEndContext="unknown" >
+			</context>
+		</contexts>
+
+		<itemDatas>
+			<itemData name="Default Text" defStyleNum="dsString" />
+			<itemData name="Normal Text" defStyleNum="dsOthers" />
+			<itemData name="Name Text" defStyleNum="dsVariable" />
+			<itemData name="Addr Text" defStyleNum="dsDecVal" />
+			<itemData name="Comment" defStyleNum="dsComment" />
+			<itemData name="Keyword Name" defStyleNum="dsKeyword" bold="false" />
+			<itemData name="Protocol" defStyleNum="dsOthers" bold="false" />
+			<itemData name="Address Identifiers" defStyleNum="dsDecVal" bold="false" />
+			<itemData name="Address" defStyleNum="dsString" bold="false" />
+			<itemData name="Port" defStyleNum="dsString" bold="true" />
+			<itemData name="Interface" defStyleNum="dsOthers" bold="false" />
+		</itemDatas>
+
+	</highlighting>
+
+	<general>
+		<comments>
+			<comment name="singleLine" start="#" />
+		</comments>
+	</general>
+</language>
